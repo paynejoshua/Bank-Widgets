@@ -18,8 +18,9 @@ function Mortgage() {
             .then(res => {
                 console.log("api call:", res.data)
                 setRate(res.data)
-                setMonthlyInterest(res.data / 12)
+                setMonthlyInterest(res.data / 100 / 12)
             }, 2000)
+            
     }, [])
 
     useEffect(() => {
@@ -40,7 +41,9 @@ function Mortgage() {
 
         let totalFixedRate = fixedRate * 12
 
-        let payment = (homeValue - downPayment) / totalFixedRate + monthlyInterest
+        let payment = (homeValue - (homeValue * downPayment / 100)) / (totalFixedRate + monthlyInterest)
+
+        console.log(payment)
 
         setMonthlyPayment(payment.toFixed(2))
 
@@ -56,7 +59,6 @@ function Mortgage() {
         calcMonthlyPayment()
     }, [fixedRate])
 
-    console.log("1", downPayment)
 
     return (
         <>
