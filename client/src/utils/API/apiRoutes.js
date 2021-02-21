@@ -11,7 +11,7 @@ const API = {
         })
       },
 
-    
+    // need to set up a post call that will pass the following parameters to the url: homePrice, downPayment, and interestRate
 }
 
 export default API
