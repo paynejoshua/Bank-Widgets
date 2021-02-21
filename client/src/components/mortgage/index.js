@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react"
 import Card from "react-bootstrap/Card";
 import API from "../../utils/API/apiRoutes";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Jumbotron from "react-bootstrap/Jumbotron";
 
 
 function Mortgage() {
