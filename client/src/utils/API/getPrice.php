@@ -1,14 +1,16 @@
 <?php
 
-$url = "http://localhost:8080/Bank-Widgets/client/src/utils";
+header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, Data');
+header("Content-Type: application/json; charset=UTF-8");
 
-$url_components = parse_url($url);
+$data = json_decode(file_get_contents("php://input"), true);
+    echo "received data";
+    print_r($data);
 
-parse_str($url_components['query'], $params); 
-
-$homePrice = $params["homePrice"];
-$downPayment = $params["downPayment"];
-$interestRate = $params["interestRate"];
+$homePrice = $data -> homePrice;
+$downPayment = $data -> downPayment;
+$interestRate = $data -> interestRate;
 
 $client = new http\Client;
 $request = new http\Client\Request;
@@ -32,3 +34,4 @@ $client->enqueue($request)->send();
 $response = $client->getResponse();
 
 echo $response->getBody();
+

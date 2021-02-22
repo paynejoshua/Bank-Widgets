@@ -1,5 +1,6 @@
 import React from "react";
 import Mortgage from "../components/mortgage";
+import MortgageAPI from "../components/mortgageAPI"
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Jumbotron from "react-bootstrap/Jumbotron";
@@ -23,7 +24,7 @@ function Home() {
                         <Mortgage />
                     </Col>
                     <Col>
-                        <Mortgage />
+                        <MortgageAPI />
                     </Col>
                 </Row>
 
