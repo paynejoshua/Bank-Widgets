@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react"
 import Card from "react-bootstrap/Card";
 import API from "../../utils/API/apiRoutes";
+import MortgageDataCard from "../mortgageDataCard";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button"
 
 
 function Mortgage() {
@@ -13,6 +17,8 @@ function Mortgage() {
     const [monthlyPayment, setMonthlyPayment] = useState();
     const [fixedRate, setFixedRate] = useState();
     const [homeValue, setHomeValue] = useState();
+    const [btn15, setBtn15] = useState("primary");
+    const [btn30, setBtn30] = useState("secondary");
 
     const [mortgageData, setMortgageData] = useState();
 
@@ -25,7 +31,7 @@ function Mortgage() {
                 setRate(res.data)
                 setMonthlyInterest(res.data / 100 / 12)
             }, 2000)
-            
+
     }, [])
 
     useEffect(() => {
@@ -50,10 +56,10 @@ function Mortgage() {
             fixedRate: fixedRate
         }
         API.getPrice(data)
-        .then(res => {
-            console.log(res.data)
-            setMortgageData(res.data)
-        })
+            .then(res => {
+                console.log(res.data)
+                setMortgageData(res.data)
+            })
 
     }
 
@@ -64,10 +70,23 @@ function Mortgage() {
     }
 
 
+    function setRate15(number) {
+        setFixedRate(number)
+        setBtn15("primary")
+        setBtn30("secondary")
+    }
 
+    function setRate30(number) {
+        setFixedRate(number)
+        setBtn15("secondary")
+        setBtn30("primary")
+    }
 
     return (
         <>
+        <Row className="d-flex justify-content-between">
+            <Col>
+            
             <Card style={{ width: "18rem" }}>
 
                 <Card.Body>
@@ -86,9 +105,9 @@ function Mortgage() {
                     <Card.Title>
                         Fixed Rate Length:
 <br></br>
-                        <button onClick={() => setFixedRate(15)}>15</button>
+                        <Button variant={btn15} style={{margin: "1rem"}} onClick={() => setRate15(15)}>15</Button>
 
-                        <button onClick={() => setFixedRate(30)}>30</button>
+                        <Button variant={btn30} style={{margin: "1rem"}} onClick={() => setRate30(30)}>30</Button>
 
                     </Card.Title>
                     <Card.Title>
@@ -98,29 +117,25 @@ function Mortgage() {
 
                     <button onClick={getPrice}>See Results</button>
 
-                    <p>Current Mortgage Rate: {rate}</p>
+                    <p>Current Mortgage Rate: {rate}%</p>
 
+                    </Card.Body>
+            </Card>
+            </Col>
+            <Col>
                     {
-                        mortgageData && 
-                       <>
-                        <Card.Title>
-                        Principle and Interest: {mortgageData.principalAndInterest}
-                    </Card.Title>
-                    <Card.Title>
-                        Taxes: {mortgageData.taxes}
-                    </Card.Title>
-                    <Card.Title>
-                        Home Insurance: {mortgageData.homeInsurance}
-                    </Card.Title>
-                    <Card.Title>
-                        Mortgage Insurance: {mortgageData.mortgageInsurance}
-                    </Card.Title>
-                       </>
+                        mortgageData &&
+                        <>
+                        <MortgageDataCard data={mortgageData} />
+                        </>
 
                     }
-                    
-                </Card.Body>
-            </Card>
+            
+            </Col>
+
+        </Row>
+
+                
 
         </>
     )
