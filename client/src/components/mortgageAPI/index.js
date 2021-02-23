@@ -5,6 +5,8 @@ import API from "../../utils/API/apiRoutes";
 
 function Mortgage() {
 
+
+
     const [rate, setRate] = useState();
     const [downPayment, setDownPayment] = useState();
     const [monthlyInterest, setMonthlyInterest] = useState();
@@ -12,10 +14,9 @@ function Mortgage() {
     const [fixedRate, setFixedRate] = useState();
     const [homeValue, setHomeValue] = useState();
 
-    const [pAndI, setPAndI] = useState();
-    const [taxes, setTaxes] = useState();
-    const [homeInsurance, setHomeInsurance] = useState();
-    const [mrtgInsur, setMrtgInsur] = useState();
+    const [mortgageData, setMortgageData] = useState();
+
+
 
     const getRate = useCallback(() => {
         API.getRate()
@@ -45,11 +46,13 @@ function Mortgage() {
         const data = {
             homePrice: homeValue,
             downPayment: downPayment,
-            interestRate: monthlyInterest
+            interestRate: monthlyInterest,
+            fixedRate: fixedRate
         }
         API.getPrice(data)
         .then(res => {
-            console.log(res)
+            console.log(res.data)
+            setMortgageData(res.data)
         })
 
     }
@@ -97,18 +100,25 @@ function Mortgage() {
 
                     <p>Current Mortgage Rate: {rate}</p>
 
-                    <Card.Title>
-                        Principle and Interest: {pAndI}
+                    {
+                        mortgageData && 
+                       <>
+                        <Card.Title>
+                        Principle and Interest: {mortgageData.principalAndInterest}
                     </Card.Title>
                     <Card.Title>
-                        Taxes: {taxes}
+                        Taxes: {mortgageData.taxes}
                     </Card.Title>
                     <Card.Title>
-                        Home Insurance: {homeInsurance}
+                        Home Insurance: {mortgageData.homeInsurance}
                     </Card.Title>
                     <Card.Title>
-                        Mortgage Insurance: {mrtgInsur}
+                        Mortgage Insurance: {mortgageData.mortgageInsurance}
                     </Card.Title>
+                       </>
+
+                    }
+                    
                 </Card.Body>
             </Card>
 

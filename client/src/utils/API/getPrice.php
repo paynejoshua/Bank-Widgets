@@ -19,34 +19,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit(0);
 }
 
-$data = json_decode(file_get_contents("php://input"), true);
-    echo "received data";
-    print_r($data);
+$data = json_decode(file_get_contents("php://input"));
 
-$homePrice = $data -> homePrice;
-$downPayment = $data -> downPayment;
-$interestRate = $data -> interestRate;
+$homePrice = $data->homePrice;
+$downPayment = $data->downPayment;
+$interestRate = $data->interestRate;
+$fixedRate = $data->fixedRate;
 
-$client = new http\Client;
-$request = new http\Client\Request;
+$curl = curl_init();
 
-
-
-$request->setRequestUrl('https://shaisachs-mortgage-payments-v1.p.rapidapi.com/payments');
-$request->setRequestMethod('GET');
-$request->setQuery(new http\QueryString([
-	'price' => $homePrice,
-	'downPayment' => $downPayment,
-	'interestRate' => $interestRate
-]));
-
-$request->setHeaders([
-	'x-rapidapi-key' => '21acf3ee9cmsh43ea2bb31469b34p1aac81jsn732637b64531',
-	'x-rapidapi-host' => 'shaisachs-mortgage-payments-v1.p.rapidapi.com'
+curl_setopt_array($curl, [
+	CURLOPT_URL => "https://shaisachs-mortgage-payments-v1.p.rapidapi.com/payments?price=$homePrice&downPayment=$downPayment&interestRate=$interestRate&type=fix{$fixedRate}",
+	CURLOPT_RETURNTRANSFER => true,
+	CURLOPT_FOLLOWLOCATION => true,
+	CURLOPT_ENCODING => "",
+	CURLOPT_MAXREDIRS => 10,
+	CURLOPT_TIMEOUT => 30,
+	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+	CURLOPT_CUSTOMREQUEST => "GET",
+	CURLOPT_HTTPHEADER => [
+		"x-rapidapi-host: shaisachs-mortgage-payments-v1.p.rapidapi.com",
+		"x-rapidapi-key: 21acf3ee9cmsh43ea2bb31469b34p1aac81jsn732637b64531"
+	],
 ]);
 
-$client->enqueue($request)->send();
-$response = $client->getResponse();
+$response = curl_exec($curl);
+$err = curl_error($curl);
 
-echo $response->getBody();
+curl_close($curl);
+
+if ($err) {
+	echo "cURL Error #:" . $err;
+} else {
+	echo $response;
+}
+
 
